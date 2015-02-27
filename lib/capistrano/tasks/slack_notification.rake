@@ -10,7 +10,7 @@ namespace :slack do
 
   set :slack_endpoint, 'https://slack.com'
   set :slack_username, 'capistrano'
-  set :slack_icon_url, 'https://github.com/linyows/capistrano-slack_notification/misc/capistrano-icon.png'
+  set :slack_icon_url, 'https://raw.githubusercontent.com/linyows/capistrano-slack_notification/master/misc/capistrano-icon.png'
 
   set :slack_deployer, -> {
     username = `git config --get user.name`.strip
