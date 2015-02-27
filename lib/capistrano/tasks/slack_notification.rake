@@ -86,24 +86,22 @@ namespace :slack do
     )
   }
 
-  def post_to_slack(message = '')
-    post_to_slack_with fetch(:slack_default_body).merge(text: message)
-  end
+  set :slack_client, -> {
+    Faraday.new(fetch :slack_endpoint) do |c|
+      c.request :url_encoded
+      c.adapter Faraday.default_adapter
+
+      v = Faraday::VERSION.split('.')
+      if v.join('.').to_f >= 0.9
+        c.options.timeout = 5
+        c.options.open_timeout = 5
+      end
+    end
+  }
 
   def post_to_slack_with(body)
     run_locally do
-      conn = Faraday.new(fetch :slack_endpoint) do |c|
-        c.request :url_encoded
-        c.adapter Faraday.default_adapter
-
-        v = Faraday::VERSION.split('.')
-        if v.join('.').to_f >= 0.9
-          c.options.timeout = 5
-          c.options.open_timeout = 5
-        end
-      end
-
-      res = conn.post fetch(:slack_path), body
+      res = fetch(:slack_client).post fetch(:slack_path), body
 
       if ENV['DEBUG']
         require 'awesome_print'
@@ -115,7 +113,7 @@ namespace :slack do
 
   desc 'Post message to Slack (ex. cap production "slack:notify[yo!])"'
   task :post, :message do |t, args|
-    post_to_slack args[:message]
+    post_to_slack_with fetch(:slack_default_body).merge(text: args[:message])
   end
 
   namespace :deploy do
