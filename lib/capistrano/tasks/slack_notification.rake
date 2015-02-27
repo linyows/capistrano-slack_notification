@@ -34,7 +34,8 @@ namespace :slack do
       channel: fetch(:slack_channel),
       icon_url: fetch(:slack_icon_url),
       text: '',
-      link_names: 1
+      link_names: 1,
+      mrkdwn: true
     }
   }
 
