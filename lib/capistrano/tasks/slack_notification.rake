@@ -84,8 +84,12 @@ namespace :slack do
       conn = Faraday.new(fetch :slack_endpoint) do |c|
         c.request :url_encoded
         c.adapter Faraday.default_adapter
-        c.options.timeout = 5
-        c.options.open_timeout = 5
+
+        v = Faraday::VERSION.split('.')
+        if v.join('.').to_f >= 0.9
+          c.options.timeout = 5
+          c.options.open_timeout = 5
+        end
       end
 
       res = conn.post fetch(:slack_path), body
