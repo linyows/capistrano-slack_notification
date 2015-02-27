@@ -33,7 +33,8 @@ namespace :slack do
       username: fetch(:slack_username),
       channel: fetch(:slack_channel),
       icon_url: fetch(:slack_icon_url),
-      text: ''
+      text: '',
+      link_names: 1
     }
   }
 
