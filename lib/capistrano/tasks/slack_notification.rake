@@ -18,10 +18,11 @@ namespace :slack do
     username
   }
 
-  set :slack_path, -> {
-    token = fetch(:slack_token)
-    "/api/chat.postMessage#{"?token=#{token}" if token}"
+  set :slack_post_message_api_endpoint, -> {
+    "/api/chat.postMessage?token=#{fetch(:slack_token)}"
   }
+
+  set :slack_path, -> { fetch(:slack_post_message_api_endpoint) }
 
   set :slack_stage, -> {
     stage = fetch(:stage)
