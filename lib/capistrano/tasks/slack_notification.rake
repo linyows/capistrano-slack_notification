@@ -22,6 +22,10 @@ namespace :slack do
     "/api/chat.postMessage?token=#{fetch(:slack_token)}"
   }
 
+  set :slack_channel_list_api_endpoint, -> {
+    "/api/channels.list?exclude_archived=1&token=#{fetch(:slack_token)}"
+  }
+
   set :slack_path, -> { fetch(:slack_post_message_api_endpoint) }
 
   set :slack_stage, -> {
@@ -114,6 +118,16 @@ namespace :slack do
   desc 'Post message to Slack (ex. cap production "slack:notify[yo!])"'
   task :post, :message do |t, args|
     post_to_slack_with fetch(:slack_default_body).merge(text: args[:message])
+  end
+
+  desc 'Get channel ID by channel name from Slack (ex. cap production "slack:channel[general])"'
+  task :channel, :channel_name do |t, args|
+    run_locally do
+      res = fetch(:slack_client).post fetch(:slack_channel_list_api_endpoint)
+      body = JSON.load(res.body)
+      channel = body['channels'].find { |ch| ch['name'] == args[:channel_name] }
+      puts "##{args[:channel_name]}: #{channel['id']}"
+    end
   end
 
   namespace :deploy do
