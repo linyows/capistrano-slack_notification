@@ -41,7 +41,7 @@ namespace :slack do
 
   set :slack_start_body, -> {
     text = "Started deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
-      " (branch #{fetch(:branch)})",
+      " (branch #{fetch(:branch)})"
 
     fetch(:slack_default_body).merge(
       attachments: JSON.dump([{
