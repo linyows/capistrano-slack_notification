@@ -39,24 +39,30 @@ namespace :slack do
   }
 
   set :slack_start_body, -> {
+    text = "Started deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
+      " (branch #{fetch(:branch)})",
+
     fetch(:slack_default_body).merge(
       attachments: JSON.dump([{
         color: "warning",
         title: fetch(:application),
-        text: "Started deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
-          " (branch #{fetch(:branch)})",
+        text: text,
+        fallback: text,
         mrkdwn_in: ['text']
       }])
     )
   }
 
   set :slack_failure_body, -> {
+    text = "Failed deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
+      " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
+
     fetch(:slack_default_body).merge(
       attachments: JSON.dump([{
         color: 'danger',
         title: fetch(:application),
-        text: "Failed deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
-          " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)",
+        text: text,
+        fallback: text,
         mrkdwn_in: ['text']
       }])
     )
@@ -64,12 +70,15 @@ namespace :slack do
 
   set :slack_success_body, -> {
     task = fetch(:deploying) ? 'deployment' : '*rollback*'
+    text = "Successful #{task} to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
+      " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
+
     fetch(:slack_default_body).merge(
       attachments: JSON.dump([{
         color: 'good',
         title: fetch(:application),
-        text: "Successful #{task} to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
-          " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)",
+        text: text,
+        fallback: text,
         mrkdwn_in: ['text']
       }])
     )
