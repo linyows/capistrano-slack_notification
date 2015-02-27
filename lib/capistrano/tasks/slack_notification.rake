@@ -98,19 +98,21 @@ namespace :slack do
     post_to_slack args[:message]
   end
 
-  desc 'Notify a deploy starting to Slack'
-  task :notify_start do
-    post_to_slack_with fetch(:slack_start_body)
-  end
+  namespace :deploy do
+    desc 'Notify a deploy starting to Slack'
+    task :start do
+      post_to_slack_with fetch(:slack_start_body)
+    end
 
-  desc 'Notify a deploy rollback to Slack'
-  task :notify_rollback do
-    post_to_slack_with fetch(
-      :"slack_#{fetch(:deploying) ? :failure : :success}_body")
-  end
+    desc 'Notify a deploy rollback to Slack'
+    task :rollback do
+      post_to_slack_with fetch(
+        :"slack_#{fetch(:deploying) ? :failure : :success}_body")
+    end
 
-  desc 'Notify a deploy finish to Slack'
-  task :notify_finish do
-    post_to_slack_with fetch(:slack_success_body)
+    desc 'Notify a deploy finish to Slack'
+    task :finish do
+      post_to_slack_with fetch(:slack_success_body)
+    end
   end
 end

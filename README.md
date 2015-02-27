@@ -43,9 +43,9 @@ set :slack_channel, '#general'
 set :slack_endpoint, 'https://hooks.slack.com'
 set :slack_path, '/services/T00000000/B00000000/XXXXXXXXXXXXXXXXX'
 
-after 'deploy:started', 'slack:notify_start'
-after 'deploy:finishing', 'slack:notify_finish'
-after 'deploy:finishing_rollback', 'slack:notify_rollback'
+after 'deploy:started', 'slack:deploy:start'
+after 'deploy:finishing', 'slack:deploy:finish'
+after 'deploy:finishing_rollback', 'slack:deploy:rollback'
 ```
 
 Contributing
