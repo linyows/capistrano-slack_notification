@@ -30,18 +30,36 @@ $ gem install capistrano-slack_notification
 Usage
 -----
 
-Capfile:
+### Capfile
 
 ```ruby
 require 'capistrano/slack_notification'
 ```
 
-config.rb:
+### config/deploy.rb
+
+if use webhook
 
 ```ruby
 set :slack_channel, '#general'
 set :slack_endpoint, 'https://hooks.slack.com'
 set :slack_path, '/services/T00000000/B00000000/XXXXXXXXXXXXXXXXX'
+
+after 'deploy:started', 'slack:deploy:start'
+after 'deploy:finishing', 'slack:deploy:finish'
+after 'deploy:finishing_rollback', 'slack:deploy:rollback'
+```
+
+if use api that needs channel_id
+
+```sh
+$ cap production "slack:channel[general]"
+#general: C038M2LE1
+```
+
+```ruby
+set :slack_channel, 'C038M2LE1'
+set :slack_token, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 after 'deploy:started', 'slack:deploy:start'
 after 'deploy:finishing', 'slack:deploy:finish'
