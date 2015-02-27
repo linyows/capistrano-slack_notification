@@ -3,6 +3,8 @@ Capistrano - Slack Notification
 
 Notify Capistrano ver3 deployment to Slack.
 
+![slack-notification-preview](https://raw.githubusercontent.com/linyows/capistrano-slack_notification/master/misc/preview.png)
+
 [![Gem version](https://img.shields.io/gem/v/capistrano-slack_notification.svg?style=flat-square)][gem]
 [gem]: https://rubygems.org/gems/capistrano-slack_notification
 
