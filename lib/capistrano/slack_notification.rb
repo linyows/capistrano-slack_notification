@@ -1,7 +1,1 @@
-require "capistrano/slack_notification/version"
-
-module Capistrano
-  module SlackNotification
-    # Your code goes here...
-  end
-end
+load File.expand_path('../tasks/slack_notification.rake', __FILE__)
