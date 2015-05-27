@@ -48,30 +48,38 @@ namespace :slack do
     text = "Started deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)})"
 
-    fetch(:slack_default_body).merge(
-      attachments: JSON.dump([{
-        color: "warning",
-        title: fetch(:application),
-        text: text,
-        fallback: text,
-        mrkdwn_in: ['text']
-      }])
-    )
+    attachments = [{
+      color: "warning",
+      title: fetch(:application),
+      text: text,
+      fallback: text,
+      mrkdwn_in: ['text']
+    }]
+
+    if fetch(:slack_token)
+      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
+    else
+      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
+    end
   }
 
   set :slack_failure_body, -> {
     text = "Failed deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
 
-    fetch(:slack_default_body).merge(
-      attachments: JSON.dump([{
+    attachments = [{
         color: 'danger',
         title: fetch(:application),
         text: text,
         fallback: text,
         mrkdwn_in: ['text']
-      }])
-    )
+    }]
+
+    if fetch(:slack_token)
+      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
+    else
+      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
+    end
   }
 
   set :slack_success_body, -> {
@@ -79,15 +87,19 @@ namespace :slack do
     text = "Successful #{task} to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
 
-    fetch(:slack_default_body).merge(
-      attachments: JSON.dump([{
-        color: 'good',
-        title: fetch(:application),
-        text: text,
-        fallback: text,
-        mrkdwn_in: ['text']
-      }])
-    )
+    attachments = [{
+      color: 'good',
+      title: fetch(:application),
+      text: text,
+      fallback: text,
+      mrkdwn_in: ['text']
+    }]
+
+    if fetch(:slack_token)
+      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
+    else
+      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
+    end
   }
 
   set :slack_client, -> {
