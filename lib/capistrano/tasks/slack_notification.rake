@@ -56,11 +56,7 @@ namespace :slack do
       mrkdwn_in: ['text']
     }]
 
-    if fetch(:slack_token)
-      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
-    else
-      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
-    end
+    build_http_body attachments
   }
 
   set :slack_failure_body, -> {
@@ -75,11 +71,7 @@ namespace :slack do
         mrkdwn_in: ['text']
     }]
 
-    if fetch(:slack_token)
-      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
-    else
-      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
-    end
+    build_http_body attachments
   }
 
   set :slack_success_body, -> {
@@ -95,11 +87,7 @@ namespace :slack do
       mrkdwn_in: ['text']
     }]
 
-    if fetch(:slack_token)
-      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
-    else
-      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
-    end
+    build_http_body attachments
   }
 
   set :slack_client, -> {
@@ -137,7 +125,8 @@ namespace :slack do
 
   desc 'Post message to Slack (ex. cap production "slack:post[yo!]")'
   task :post, :message do |t, args|
-    post_to_slack_with fetch(:slack_default_body).merge(text: args[:message])
+    attachments = [{ text: args[:message] }]
+    post_to_slack_with build_http_body(attachments)
   end
 
   desc 'Get channel ID by channel name from Slack (ex. cap production "slack:channel[general])"'
