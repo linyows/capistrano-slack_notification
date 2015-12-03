@@ -127,7 +127,7 @@ namespace :slack do
     end
   end
 
-  desc 'Post message to Slack (ex. cap production "slack:notify[yo!])"'
+  desc 'Post message to Slack (ex. cap production "slack:post[yo!]")'
   task :post, :message do |t, args|
     post_to_slack_with fetch(:slack_default_body).merge(text: args[:message])
   end
