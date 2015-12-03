@@ -115,6 +115,14 @@ namespace :slack do
     end
   }
 
+  def build_http_body(attachments)
+    if fetch(:slack_token)
+      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
+    else
+      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
+    end
+  end
+
   def post_to_slack_with(body)
     run_locally do
       res = fetch(:slack_client).post fetch(:slack_path), body
