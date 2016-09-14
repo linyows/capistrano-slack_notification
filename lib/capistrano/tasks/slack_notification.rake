@@ -48,30 +48,30 @@ namespace :slack do
     text = "Started deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)})"
 
-    attachments = [{
-      color: "warning",
-      title: fetch(:application),
-      text: text,
-      fallback: text,
-      mrkdwn_in: ['text']
-    }]
-
-    build_http_body attachments
+    build_http_body {
+      attachments: [{
+        color: "warning",
+        title: fetch(:application),
+        text: text,
+        fallback: text,
+        mrkdwn_in: ['text']
+      }]
+    }
   }
 
   set :slack_failure_body, -> {
     text = "Failed deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
 
-    attachments = [{
+    build_http_body {
+      attachments: [{
         color: 'danger',
         title: fetch(:application),
         text: text,
         fallback: text,
         mrkdwn_in: ['text']
-    }]
-
-    build_http_body attachments
+      }]
+    }
   }
 
   set :slack_success_body, -> {
@@ -79,15 +79,15 @@ namespace :slack do
     text = "Successful #{task} to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
 
-    attachments = [{
-      color: 'good',
-      title: fetch(:application),
-      text: text,
-      fallback: text,
-      mrkdwn_in: ['text']
-    }]
-
-    build_http_body attachments
+    build_http_body {
+      attachments: [{
+        color: 'good',
+        title: fetch(:application),
+        text: text,
+        fallback: text,
+        mrkdwn_in: ['text']
+      }]
+    }
   }
 
   set :slack_client, -> {
@@ -103,11 +103,11 @@ namespace :slack do
     end
   }
 
-  def build_http_body(attachments)
+  def build_http_body(body)
     if fetch(:slack_token)
-      fetch(:slack_default_body).merge(attachments: JSON.dump(attachments))
+      fetch(:slack_default_body).merge(JSON.dump(body))
     else
-      JSON.dump(fetch(:slack_default_body).merge(attachments: attachments))
+      JSON.dump(fetch(:slack_default_body).merge(body))
     end
   end
 
