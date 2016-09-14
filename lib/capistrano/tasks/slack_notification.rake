@@ -48,7 +48,7 @@ namespace :slack do
     text = "Started deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)})"
 
-    build_http_body {
+    build_http_body({
       attachments: [{
         color: "warning",
         title: fetch(:application),
@@ -56,14 +56,14 @@ namespace :slack do
         fallback: text,
         mrkdwn_in: ['text']
       }]
-    }
+    })
   }
 
   set :slack_failure_body, -> {
     text = "Failed deploying to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
 
-    build_http_body {
+    build_http_body({
       attachments: [{
         color: 'danger',
         title: fetch(:application),
@@ -71,7 +71,7 @@ namespace :slack do
         fallback: text,
         mrkdwn_in: ['text']
       }]
-    }
+    })
   }
 
   set :slack_success_body, -> {
@@ -79,7 +79,7 @@ namespace :slack do
     text = "Successful #{task} to #{fetch(:slack_stage)} by @#{fetch(:slack_deployer)}" +
       " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
 
-    build_http_body {
+    build_http_body({
       attachments: [{
         color: 'good',
         title: fetch(:application),
@@ -87,7 +87,7 @@ namespace :slack do
         fallback: text,
         mrkdwn_in: ['text']
       }]
-    }
+    })
   }
 
   set :slack_client, -> {
